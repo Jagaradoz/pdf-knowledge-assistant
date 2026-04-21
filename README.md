@@ -25,10 +25,10 @@ python scripts/download_pdfs.py
 |------------|------|
 | Python 3.10+ | Core development language |
 | FastAPI | REST API framework for document queries |
-| LangChain | Orchestration of text splitting and RAG logic |
-| pdfplumber | Precise text extraction from complex PDF layouts |
-| FAISS | High-performance local vector similarity search |
-| sentence-transformers | Local semantic embeddings |
+| LangChain | End-to-end RAG pipeline orchestration (Loading, Chunking, Embedding, Retrieval) |
+| LangChain PDFPlumberLoader | Precise text extraction from complex PDF layouts |
+| LangChain Chroma | High-performance local vector similarity search |
+| LangChain HuggingFaceEmbeddings | Local semantic embeddings |
 | OpenAI / Ollama | LLM providers for the final answering step |
 
 ## Project Structure

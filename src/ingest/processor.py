@@ -1,6 +1,6 @@
 import os
 from ingest.parser import extract_text_from_pdf
-from ingest.chunker import chunk_text
+from ingest.chunker import chunk_documents
 from rag.retriever import VectorRetriever
 
 class DocumentProcessor:
@@ -13,8 +13,8 @@ class DocumentProcessor:
     def process_pdf(self, file_path: str) -> int:
         """
         Orchestrates the full ingestion flow:
-        1. Extract text from PDF
-        2. Chunk the text
+        1. Extract text from PDF into LangChain Documents
+        2. Chunk the documents
         3. Store chunks in the vector database
         
         Returns the number of chunks added.
@@ -22,17 +22,13 @@ class DocumentProcessor:
         print(f"Processing: {file_path}")
         
         # 1. Extraction
-        raw_text = extract_text_from_pdf(file_path)
+        documents = extract_text_from_pdf(file_path)
         
         # 2. Chunking
-        chunks = chunk_text(raw_text)
+        chunks = chunk_documents(documents)
         
         # 3. Storage
-        # We add some basic metadata like the filename
-        filename = os.path.basename(file_path)
-        metadatas = [{"source": filename} for _ in chunks]
-        
-        self.retriever.add_chunks(chunks, metadatas=metadatas)
+        self.retriever.add_documents(chunks)
         
         return len(chunks)
 

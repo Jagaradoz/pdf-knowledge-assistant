@@ -15,9 +15,8 @@ __pycache__/
 # Jupyter Notebook
 .ipynb_checkpoints
 
-# Project Data & Docs
+# Project Data
 data/
-docs/
 
 # IDEs
 .vscode/

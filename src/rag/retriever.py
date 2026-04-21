@@ -1,9 +1,7 @@
 import os
-import chromadb
-import uuid
-
-# Add src to sys.path is not needed here as it will be imported from scripts/main
-from rag.embedder import get_embeddings
+from langchain_chroma import Chroma
+from langchain_core.documents import Document
+from rag.embedder import get_embeddings_model
 
 # Define the path for the local ChromaDB store
 DB_DIR = os.path.join(os.path.dirname(__file__), '..', '..', 'data', 'vector_store')
@@ -11,57 +9,39 @@ COLLECTION_NAME = "pdf_chunks"
 
 class VectorRetriever:
     def __init__(self):
-        # Initialize the persistent ChromaDB client pointing to our data directory
-        self.client = chromadb.PersistentClient(path=DB_DIR)
-        
-        # Get or create a collection. We use cosine similarity for text search.
-        self.collection = self.client.get_or_create_collection(
-            name=COLLECTION_NAME,
-            metadata={"hnsw:space": "cosine"}
+        # Initialize the LangChain Chroma vector store
+        self.embedding_function = get_embeddings_model()
+        self.vectorstore = Chroma(
+            collection_name=COLLECTION_NAME,
+            embedding_function=self.embedding_function,
+            persist_directory=DB_DIR
         )
 
-    def add_chunks(self, chunks: list[str], metadatas: list[dict] = None):
+    def add_documents(self, documents: list[Document]):
         """
-        Generates embeddings for the chunks and adds them to the vector store.
+        Adds LangChain Document objects to the vector store.
         """
-        if not chunks:
+        if not documents:
             return
 
-        # Generate unique IDs for each chunk
-        ids = [str(uuid.uuid4()) for _ in chunks]
-        
-        # Generate embeddings using our local embedder
-        embeddings = get_embeddings(chunks)
-        
-        # If no metadatas provided, create empty dicts
-        if metadatas is None:
-            metadatas = [{} for _ in chunks]
-            
-        # Add to ChromaDB
-        self.collection.add(
-            embeddings=embeddings,
-            documents=chunks,
-            metadatas=metadatas,
-            ids=ids
-        )
+        # Add to ChromaDB via LangChain
+        self.vectorstore.add_documents(documents=documents)
         
     def get_collection_count(self) -> int:
         """
         Returns the number of items currently in the collection.
         """
-        return self.collection.count()
+        return len(self.vectorstore.get()['ids'])
 
-    def query(self, query_text: str, n_results: int = 5):
+    def query(self, query_text: str, n_results: int = 5) -> list[tuple[Document, float]]:
         """
-        Searches for the most relevant chunks based on the query text.
+        Searches for the most relevant documents based on the query text.
+        Returns a list of tuples containing the Document and its similarity score.
         """
-        # Generate embedding for the query
-        query_embedding = get_embeddings([query_text])[0]
-        
-        # Query ChromaDB
-        results = self.collection.query(
-            query_embeddings=[query_embedding],
-            n_results=n_results
+        # Query ChromaDB via LangChain
+        results = self.vectorstore.similarity_search_with_score(
+            query=query_text,
+            k=n_results
         )
         
         return results

@@ -33,19 +33,14 @@ def main():
     try:
         # Perform retrieval
         results = retriever.query(query, n_results=3)
-        
-        # Display results
-        documents = results['documents'][0]
-        metadatas = results['metadatas'][0]
-        distances = results['distances'][0]
 
         print("\n--- Top 3 Relevant Results ---")
-        for i, (doc, meta, dist) in enumerate(zip(documents, metadatas, distances)):
-            source = meta.get('source', 'Unknown')
-            print(f"\n[Result {i+1}] (Distance: {dist:.4f}) | Source: {source}")
+        for i, (doc, dist) in enumerate(results):
+            source = doc.metadata.get('source', 'Unknown')
+            print(f"\n[Result {i+1}] (Distance/Score: {dist:.4f}) | Source: {source}")
             print("-" * 30)
             # Show first 300 chars of the chunk
-            preview = doc.replace('\n', ' ')[:300]
+            preview = doc.page_content.replace('\n', ' ')[:300]
             print(f"{preview}...")
             
     except Exception as e:
