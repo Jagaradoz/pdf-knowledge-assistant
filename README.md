@@ -8,6 +8,7 @@ A local, educational Retrieval-Augmented Generation (RAG) system built to demyst
 - **Modular RAG Pipeline**: Clear separation between ingestion (parsing/chunking), retrieval (embeddings/vector search), and the generation layer.
 - **Local-First Architecture**: Built using local vector stores (FAISS) and local embedding models for privacy and cost-efficiency.
 - **Transparent Logic**: Logs the exact chunks used to formulate every answer, making the AI's reasoning fully traceable.
+- **Learning Sandbox**: Interactive Jupyter Notebooks for each phase to help you understand the "why" behind every line of code.
 
 ## Dataset Generation
 
@@ -82,10 +83,8 @@ pdf-knowledge-assistant/
 
 ## Evaluation Flow
 
-**PDF → Chunk → Embed → Index → Search → Answer**
+**Vectorize → Search → Answer**
 
-1. **Ingest**: PDF text is extracted and normalized.
-2. **Chunk**: Text is split into overlapping 1000-character segments.
-3. **Embed**: Segments are converted into semantic vectors.
-4. **Search**: User queries find the top-K most similar segments in FAISS.
-5. **Answer**: Context is injected into an LLM prompt to generate a grounded response.
+1. **Vectorize**: PDF documents are extracted, chunked, embedded, and indexed into ChromaDB.
+2. **Search**: User queries find the top-K most similar segments using semantic search.
+3. **Answer**: Retrieved context is injected into an LLM prompt to generate a grounded response.
