@@ -15,7 +15,7 @@ A local, educational Retrieval-Augmented Generation (RAG) system built to demyst
 This project includes a utility to quickly bootstrap a massive dataset of high-quality PDFs. To download 100+ research papers into your local environment:
 
 ```bash
-python download_pdfs.py
+python scripts/download_pdfs.py
 ```
 *Note: This script hits the arXiv API and automatically organizes the papers into your data folder.*
 
@@ -44,7 +44,9 @@ pdf-knowledge-assistant/
 ├── notebooks/             # Step-by-step educational experiments
 ├── .env.example           # Configuration template
 ├── .gitignore
-├── download_pdfs.py       # Massive PDF download utility
+├── scripts/               # Utility scripts (dataset generation, etc.)
+│   ├── download_pdfs.py   # Massive PDF download utility
+│   └── test_ingestion.py   # Ingestion testing script
 ├── requirements.txt
 └── README.md
 ```
@@ -73,7 +75,7 @@ pdf-knowledge-assistant/
 
 3. **Download your dataset:**
    ```bash
-   python download_pdfs.py
+   python scripts/download_pdfs.py
    ```
 
 4. **Start the assistant:**

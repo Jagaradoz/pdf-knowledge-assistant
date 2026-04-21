@@ -50,3 +50,18 @@ class VectorRetriever:
         Returns the number of items currently in the collection.
         """
         return self.collection.count()
+
+    def query(self, query_text: str, n_results: int = 5):
+        """
+        Searches for the most relevant chunks based on the query text.
+        """
+        # Generate embedding for the query
+        query_embedding = get_embeddings([query_text])[0]
+        
+        # Query ChromaDB
+        results = self.collection.query(
+            query_embeddings=[query_embedding],
+            n_results=n_results
+        )
+        
+        return results
