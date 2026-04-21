@@ -1,0 +1,11 @@
+arxiv
+pdfplumber
+requests
+langchain
+langchain-community
+faiss-cpu
+sentence-transformers
+fastapi
+uvicorn
+python-dotenv
+pytest
