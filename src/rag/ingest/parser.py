@@ -1,12 +1,14 @@
+import os
 from langchain_community.document_loaders import PDFPlumberLoader
 from langchain_core.documents import Document
-import os
+from src.core.logger import logger
 
 def extract_text_from_pdf(file_path: str) -> list[Document]:
     """
     Extracts text from a PDF file page by page using LangChain's PDFPlumberLoader.
     """
     if not os.path.exists(file_path):
+        logger.error(f"PDF file not found at: {file_path}")
         raise FileNotFoundError(f"PDF file not found at: {file_path}")
 
     # Using lower tolerance values to prevent word concatenation in dense layouts like abstracts

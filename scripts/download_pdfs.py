@@ -6,7 +6,7 @@ import ssl
 ssl._create_default_https_context = ssl._create_unverified_context
 
 # 1. Create a folder to hold your PDFs so they don't clutter your main directory
-pdf_dir = "my_pdf_dataset"
+pdf_dir = "data/raw/"
 os.makedirs(pdf_dir, exist_ok=True)
 
 print(f"Starting download. PDFs will be saved to: ./{pdf_dir}")
@@ -18,7 +18,7 @@ client = arxiv.Client()
 # You can change "machine learning" to anything (e.g., "quantum physics", "economics")
 search = arxiv.Search(
     query="machine learning",
-    max_results=100, # <--- Change this number to get more or fewer PDFs
+    max_results=10,
     sort_by=arxiv.SortCriterion.SubmittedDate
 )
 
@@ -32,7 +32,7 @@ for count, paper in enumerate(results, start=1):
         filepath = os.path.join(pdf_dir, filename)
         
         # Download the actual PDF file
-        print(f"[{count}/100] Downloading: {paper.title}...")
+        print(f"[{count}/10] Downloading: {paper.title}...")
         paper.download_pdf(dirpath=pdf_dir, filename=filename)
         
     except Exception as e:

@@ -1,20 +1,16 @@
-import os
 from langchain_chroma import Chroma
 from langchain_core.documents import Document
-from rag.embedder import get_embeddings_model
-
-# Define the path for the local ChromaDB store
-DB_DIR = os.path.join(os.path.dirname(__file__), '..', '..', 'data', 'vector_store')
-COLLECTION_NAME = "pdf_chunks"
+from src.core.config import settings
+from .embedder import get_embeddings_model
 
 class VectorRetriever:
     def __init__(self):
         # Initialize the LangChain Chroma vector store
         self.embedding_function = get_embeddings_model()
         self.vectorstore = Chroma(
-            collection_name=COLLECTION_NAME,
+            collection_name=settings.COLLECTION_NAME,
             embedding_function=self.embedding_function,
-            persist_directory=DB_DIR
+            persist_directory=settings.CHROMA_DB_PATH
         )
 
     def add_documents(self, documents: list[Document]):

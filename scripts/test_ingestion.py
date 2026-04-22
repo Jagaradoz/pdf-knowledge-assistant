@@ -1,5 +1,6 @@
 import os
 import sys
+import glob
 
 # Add the src directory to the python path
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', 'src'))
@@ -8,25 +9,30 @@ from ingest.processor import DocumentProcessor
 
 def main():
     # Define paths
-    pdf_path = os.path.join(os.path.dirname(__file__), '..', 'data', 'raw', 'sample.pdf')
+    raw_dir = os.path.join(os.path.dirname(__file__), '..', 'data', 'raw')
+    pdf_files = glob.glob(os.path.join(raw_dir, "*.pdf"))
     
-    if not os.path.exists(pdf_path):
-        print(f"Error: Please place a sample PDF file at {os.path.abspath(pdf_path)}")
+    if not pdf_files:
+        print(f"Error: No PDF files found in {os.path.abspath(raw_dir)}")
         return
 
-    print("--- Starting Unified Ingestion Test ---")
+    print(f"--- Starting Unified Ingestion Test ({len(pdf_files)} files) ---")
     
     # Initialize the processor
     # This will also initialize the VectorRetriever and local ChromaDB
     processor = DocumentProcessor()
     
     try:
-        # Run the full processing flow
-        chunk_count = processor.process_pdf(pdf_path)
-        print(f"\nSuccess! Added {chunk_count} chunks to the vector store.")
-        
+        total_chunks_added = 0
+        for pdf_path in pdf_files:
+            # Run the full processing flow
+            chunk_count = processor.process_pdf(pdf_path)
+            total_chunks_added += chunk_count
+            print(f"Success! Added {chunk_count} chunks from {os.path.basename(pdf_path)}.")
+            
         # Verify collection count
         total_count = processor.retriever.get_collection_count()
+        print(f"\nFinished! Added a total of {total_chunks_added} chunks.")
         print(f"Total items in Vector Store: {total_count}")
         
     except Exception as e:

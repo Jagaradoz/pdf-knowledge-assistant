@@ -11,3 +11,5 @@ langchain-chroma
 langchain-huggingface
 scikit-learn
 matplotlib
+arxiv
+python-dotenv

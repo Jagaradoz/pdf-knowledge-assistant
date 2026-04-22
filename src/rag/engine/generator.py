@@ -1,26 +1,26 @@
 from langchain_core.prompts import PromptTemplate
-from main.config import LLM_BACKEND, OLLAMA_MODEL, OPENAI_API_KEY
+from src.core.config import settings
 
 class LLMGenerator:
     def __init__(self):
         """
         Initializes the LLM Backend based on config.py.
         """
-        if LLM_BACKEND == "openai":
+        if settings.LLM_BACKEND == "openai":
             # Requires langchain-openai package
             try:
                 from langchain_openai import ChatOpenAI
             except ImportError:
                 raise ImportError("Please install langchain-openai to use the OpenAI backend.")
                 
-            if not OPENAI_API_KEY:
+            if not settings.OPENAI_API_KEY:
                 raise ValueError("OPENAI_API_KEY is not set in config or environment.")
                 
-            self.llm = ChatOpenAI(temperature=0, api_key=OPENAI_API_KEY)
+            self.llm = ChatOpenAI(temperature=0, api_key=settings.OPENAI_API_KEY)
         else:
             # Default to Ollama
             from langchain_community.llms import Ollama
-            self.llm = Ollama(model=OLLAMA_MODEL)
+            self.llm = Ollama(model=settings.OLLAMA_MODEL)
             
         # Define the prompt template from the Data Pipeline doc
         template = """You are a helpful AI assistant. Use the following pieces of retrieved context to answer the user's question. 
