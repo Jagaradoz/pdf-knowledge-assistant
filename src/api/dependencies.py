@@ -1,4 +1,4 @@
-from ..rag.engine.pipeline import rag_pipeline
+from ..rag.pipeline import rag_pipeline
 
 def get_rag_pipeline():
     """

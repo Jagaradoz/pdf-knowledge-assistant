@@ -14,7 +14,11 @@ async def query_documents(
     Submit a question to the RAG system and get an answer with source citations.
     """
     try:
-        result = rag.answer_query(request.query, n_results=request.n_results, llm_backend=request.llm_backend)
+        result = rag.answer_query(
+            request.query, 
+            llm_backend=request.llm_backend,
+            model=request.model
+        )
         return result
     except Exception as e:
         logger.error(f"Error processing query: {e}")

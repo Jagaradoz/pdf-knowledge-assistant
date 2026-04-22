@@ -4,90 +4,94 @@ A local, educational Retrieval-Augmented Generation (RAG) system built to demyst
 
 ## Features
 
-- **Automated Dataset Generation**: Use the built-in scraper to fetch hundreds of high-quality research papers from arXiv for testing.
-- **Modular RAG Pipeline**: Clear separation between ingestion (parsing/chunking), retrieval (embeddings/vector search), and the generation layer.
-- **Local-First Architecture**: Built using local vector stores (FAISS) and local embedding models for privacy and cost-efficiency.
-- **Transparent Logic**: Logs the exact chunks used to formulate every answer, making the AI's reasoning fully traceable.
-- **Learning Sandbox**: Interactive Jupyter Notebooks for each phase to help you understand the "why" behind every line of code.
+- **Automated Dataset Generation**: Use the built-in scraper to fetch high-quality research papers from arXiv for testing.
+- **Simplified RAG Architecture**: A flattened, easy-to-follow pipeline for embedding, retrieval, and generation.
+- **Local-First Architecture**: Built using local vector stores (ChromaDB) and local embedding models for privacy and cost-efficiency.
+- **Multi-Backend LLM Support**: Support for both OpenAI (API) and Ollama (Local) for the final answering step.
+- **Educational Sandbox**: Interactive Jupyter Notebooks designed to help you understand the "why" behind every step of the RAG process.
 
-## Dataset Generation
+## API Reference
 
-This project includes a utility to quickly bootstrap a massive dataset of high-quality PDFs. To download 100+ research papers into your local environment:
+### 1. Ask a Question
+Submit a query to the RAG system to get an answer based on your documents.
 
-```bash
-python scripts/download_pdfs.py
+**Endpoint**: `POST /api/query/`
+
+**Request Body**:
+```json
+{
+  "query": "What is CityRAG?",
+  "llm_backend": "openai",
+  "model": "gpt-4-turbo"
+}
 ```
-*Note: This script hits the arXiv API and automatically organizes the papers into your data folder.*
 
-## Tech Stack
+**Example (curl)**:
+```bash
+curl -X POST "http://localhost:8000/api/query/" \
+     -H "Content-Type: application/json" \
+     -d '{"query": "What is CityRAG?", "model": "gpt-4-turbo"}'
+```
 
-| Technology | Role |
-|------------|------|
-| Python 3.10+ | Core development language |
-| FastAPI | REST API framework for document queries |
-| LangChain | End-to-end RAG pipeline orchestration (Loading, Chunking, Embedding, Retrieval) |
-| LangChain PDFPlumberLoader | Precise text extraction from complex PDF layouts |
-| LangChain Chroma | High-performance local vector similarity search |
-| LangChain HuggingFaceEmbeddings | Local semantic embeddings |
-| OpenAI / Ollama | LLM providers for the final answering step |
+### 2. Health Check
+Verify the system status.
+
+**Endpoint**: `GET /api/system/health`
 
 ## Project Structure
 
 ```text
 pdf-knowledge-assistant/
 ├── src/
-│   ├── api/               # FastAPI route handlers and server
-│   ├── ingest/            # PDF extraction and segment chunking (using PDFPlumberLoader)
-│   ├── rag/               # Embedding logic and vector store (ChromaDB)
-│   └── main/
-│       ├── cli.py         # Terminal-based interactive chatbot
-│       └── config.py      # Global environment settings
-├── notebooks/             # Step-by-step self-contained educational experiments
-├── .env.example           # Configuration template
-├── .gitignore
-├── scripts/               # Utility scripts (dataset generation, etc.)
-│   ├── download_pdfs.py   # Massive PDF download utility
-│   └── test_ingestion.py  # Ingestion testing script
-├── requirements.txt
+│   ├── api/               # FastAPI route handlers, schemas, and dependencies
+│   ├── core/              # Global configuration and logging
+│   └── rag/               # Core RAG logic (Retriever, Generator, Pipeline)
+├── notebooks/             # Step-by-step educational experiments
+│   ├── 01_vectorization.ipynb
+│   ├── 02_retrieval.ipynb
+│   └── 03_llm_integration.ipynb
+├── scripts/               # Utility scripts
+│   ├── load_data.py       # Scrape ArXiv papers
+│   └── ingest.py          # Process and index raw PDFs
+├── data/                  # Local storage for PDFs and Vector DB
+├── .env                   # Local environment settings
 └── README.md
 ```
 
+## Educational Flow
+
+This project is organized into three distinct phases, mirroring the structure of the included notebooks:
+
+1. **Phase 1: Vectorization**: PDF documents are extracted, chunked, and converted into semantic vectors using HuggingFace models.
+2. **Phase 2: Retrieval**: User queries are transformed into vectors and compared against the database to find the most relevant document segments.
+3. **Phase 3: Generation**: The retrieved segments are "stuffed" into a prompt template and sent to an LLM (OpenAI or Ollama) to generate a grounded answer.
+
 ## Getting Started
 
-### Prerequisites
+### 1. Installation
 
-- Python 3.10+
-- (Optional) OpenAI API Key or local Ollama instance
+```bash
+git clone https://github.com/Jagaradoz/pdf-knowledge-assistant.git
+cd pdf-knowledge-assistant
+python -m venv .venv
+source .venv/bin/activate  # On Windows: .venv\Scripts\activate
+pip install -r requirements.txt
+```
 
-### Installation
+### 2. Prepare Your Data
 
-1. **Clone the repository:**
-   ```bash
-   git clone https://github.com/Jagaradoz/pdf-knowledge-assistant.git
-   cd pdf-knowledge-assistant
-   ```
+Download a sample dataset of research papers:
+```bash
+python scripts/load_data.py
+```
 
-2. **Set up the environment:**
-   ```bash
-   python -m venv .venv
-   source .venv/bin/activate  # On Windows: .venv\Scripts\activate
-   pip install -r requirements.txt
-   ```
+Process and index the PDFs into the vector database:
+```bash
+python scripts/ingest.py
+```
 
-3. **Download your dataset:**
-   ```bash
-   python scripts/download_pdfs.py
-   ```
+### 3. Start the API
 
-4. **Start the assistant:**
-   ```bash
-   python src/main/cli.py
-   ```
-
-## Evaluation Flow
-
-**Vectorize → Search → Answer**
-
-1. **Vectorize**: PDF documents are extracted, chunked, embedded, and indexed into ChromaDB.
-2. **Search**: User queries find the top-K most similar segments using semantic search.
-3. **Answer**: Retrieved context is injected into an LLM prompt to generate a grounded response.
+```bash
+python -m uvicorn src.api.main:app --reload
+```

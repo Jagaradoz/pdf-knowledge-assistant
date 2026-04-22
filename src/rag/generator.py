@@ -45,18 +45,29 @@ class LLMGenerator:
             logger.info("OpenAI LLM initialized.")
         return self._openai_llm
 
-    def _get_llm(self, llm_backend: str = None):
+    def _get_llm(self, llm_backend: str = None, model: str = None):
         backend = llm_backend or settings.LLM_BACKEND
+        
+        # If a specific model is requested, we create a temporary instance
+        if model:
+            if backend == "openai":
+                from langchain_openai import ChatOpenAI
+                return ChatOpenAI(model=model, temperature=0, api_key=settings.OPENAI_API_KEY)
+            else:
+                from langchain_community.llms import Ollama
+                return Ollama(model=model, base_url=settings.OLLAMA_BASE_URL)
+                
+        # Otherwise use the cached default instances
         if backend == "openai":
             return self._get_openai_llm()
         return self._get_ollama_llm()
 
-    def generate_answer(self, context: str, query: str, llm_backend: str = None) -> str:
+    def generate_answer(self, context: str, query: str, llm_backend: str = None, model: str = None) -> str:
         """
         Generates an answer from the LLM given the context and query.
-        Optionally overrides the LLM backend for this request.
+        Optionally overrides the LLM backend or model for this request.
         """
-        llm = self._get_llm(llm_backend)
+        llm = self._get_llm(llm_backend, model)
         chain = self.prompt | llm
         return chain.invoke({
             "context": context,
