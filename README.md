@@ -37,8 +37,8 @@ python scripts/download_pdfs.py
 pdf-knowledge-assistant/
 ├── src/
 │   ├── api/               # FastAPI route handlers and server
-│   ├── ingest/            # PDF extraction and segment chunking
-│   ├── rag/               # Embedding logic and vector store management
+│   ├── ingest/            # PDF extraction and segment chunking (using PDFPlumberLoader)
+│   ├── rag/               # Embedding logic and vector store (ChromaDB)
 │   ├── cli.py             # Terminal-based interactive chatbot
 │   └── config.py          # Global environment settings
 ├── notebooks/             # Step-by-step educational experiments

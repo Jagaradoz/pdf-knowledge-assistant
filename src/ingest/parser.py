@@ -9,7 +9,12 @@ def extract_text_from_pdf(file_path: str) -> list[Document]:
     if not os.path.exists(file_path):
         raise FileNotFoundError(f"PDF file not found at: {file_path}")
 
-    loader = PDFPlumberLoader(file_path)
+    # Using lower tolerance values to prevent word concatenation in dense layouts like abstracts
+    text_kwargs = {
+        "x_tolerance": 1.5,
+        "y_tolerance": 1.5,
+    }
+    loader = PDFPlumberLoader(file_path, text_kwargs=text_kwargs)
     documents = loader.load()
     
     if not documents:
