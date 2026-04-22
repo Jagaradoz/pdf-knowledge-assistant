@@ -4,30 +4,30 @@ from typing import Optional
 
 class Settings(BaseSettings):
     # App Settings
-    APP_NAME: str = "PDF Knowledge Assistant"
+    APP_NAME: str
     DEBUG: bool = False
     
     # LLM Backend: "ollama" or "openai"
-    LLM_BACKEND: str = "ollama"
+    LLM_BACKEND: str
     
     # Ollama settings
-    OLLAMA_MODEL: str = "llama3"
-    OLLAMA_BASE_URL: str = "http://localhost:11434"
+    OLLAMA_MODEL: str
+    OLLAMA_BASE_URL: str
     
     # OpenAI settings
     OPENAI_API_KEY: Optional[str] = None
-    OPENAI_MODEL: str = "gpt-4-turbo"
+    OPENAI_MODEL: str
     
     # Vector DB settings
     CHROMA_DB_PATH: str = os.path.join(os.path.dirname(__file__), "..", "..", "data", "vector_store")
-    COLLECTION_NAME: str = "pdf_chunks"
+    COLLECTION_NAME: str
     
     # Ingestion settings
-    CHUNK_SIZE: int = 1000
-    CHUNK_OVERLAP: int = 200
+    CHUNK_SIZE: int
+    CHUNK_OVERLAP: int
     
     # Embedding settings
-    EMBEDDING_MODEL_NAME: str = "all-MiniLM-L6-v2"
+    EMBEDDING_MODEL_NAME: str
 
     model_config = SettingsConfigDict(
         env_file=os.path.join(os.path.dirname(__file__), "..", "..", ".env"),
