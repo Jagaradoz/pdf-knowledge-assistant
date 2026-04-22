@@ -28,10 +28,11 @@ pdf-knowledge-assistant/
 │   │   └── retriever.py     # Search and storage logic
 │   ├── api/
 │   │   └── main.py          # FastAPI application
-│   ├── cli.py               # Main CLI entrypoint
-│   └── config.py            # Environment settings
+│   └── main/
+│       ├── cli.py           # Main CLI entrypoint
+│       └── config.py        # Environment settings
 ├── scripts/               # Utility scripts (dataset generation, etc.)
-├── notebooks/             # Educational sandboxes for each phase
+├── notebooks/             # Self-contained educational sandboxes for each phase
 ├── docs/                    # Project documentation
 ├── requirements.txt
 └── .env                     # Configuration

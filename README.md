@@ -39,14 +39,15 @@ pdf-knowledge-assistant/
 │   ├── api/               # FastAPI route handlers and server
 │   ├── ingest/            # PDF extraction and segment chunking (using PDFPlumberLoader)
 │   ├── rag/               # Embedding logic and vector store (ChromaDB)
-│   ├── cli.py             # Terminal-based interactive chatbot
-│   └── config.py          # Global environment settings
-├── notebooks/             # Step-by-step educational experiments
+│   └── main/
+│       ├── cli.py         # Terminal-based interactive chatbot
+│       └── config.py      # Global environment settings
+├── notebooks/             # Step-by-step self-contained educational experiments
 ├── .env.example           # Configuration template
 ├── .gitignore
 ├── scripts/               # Utility scripts (dataset generation, etc.)
 │   ├── download_pdfs.py   # Massive PDF download utility
-│   └── test_ingestion.py   # Ingestion testing script
+│   └── test_ingestion.py  # Ingestion testing script
 ├── requirements.txt
 └── README.md
 ```
@@ -80,7 +81,7 @@ pdf-knowledge-assistant/
 
 4. **Start the assistant:**
    ```bash
-   python src/cli.py
+   python src/main/cli.py
    ```
 
 ## Evaluation Flow

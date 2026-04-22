@@ -6,7 +6,7 @@ from src.core.logger import logger
 
 app = FastAPI(
     title=settings.APP_NAME,
-    description="API for the PDF Knowledge Assistant RAG System",
+    description="PDF Knowledge Assistant (Basic RAG Implementation)",
     version="1.0.0"
 )
 

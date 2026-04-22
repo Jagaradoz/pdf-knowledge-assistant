@@ -1,3 +1,4 @@
+import os
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from typing import Optional
 
@@ -18,8 +19,8 @@ class Settings(BaseSettings):
     OPENAI_MODEL: str = "gpt-4-turbo"
     
     # Vector DB settings
-    CHROMA_DB_PATH: str = "./data/chroma_db"
-    COLLECTION_NAME: str = "pdf_collection"
+    CHROMA_DB_PATH: str = os.path.join(os.path.dirname(__file__), "..", "..", "data", "vector_store")
+    COLLECTION_NAME: str = "pdf_chunks"
     
     # Ingestion settings
     CHUNK_SIZE: int = 1000
@@ -28,6 +29,9 @@ class Settings(BaseSettings):
     # Embedding settings
     EMBEDDING_MODEL_NAME: str = "all-MiniLM-L6-v2"
 
-    model_config = SettingsConfigDict(env_file=".env", extra="ignore")
+    model_config = SettingsConfigDict(
+        env_file=os.path.join(os.path.dirname(__file__), "..", "..", ".env"),
+        extra="ignore"
+    )
 
 settings = Settings()
