@@ -29,7 +29,7 @@ class VectorRetriever:
         """
         return len(self.vectorstore.get()['ids'])
 
-    def query(self, query_text: str, n_results: int = 5) -> list[tuple[Document, float]]:
+    def query(self, query_text: str, n_results: int = 3) -> list[tuple[Document, float]]:
         """
         Searches for the most relevant documents based on the query text.
         Returns a list of tuples containing the Document and its similarity score.

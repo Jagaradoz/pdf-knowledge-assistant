@@ -21,5 +21,9 @@ def extract_text_from_pdf(file_path: str) -> list[Document]:
     
     if not documents:
         raise ValueError("No text could be extracted from the PDF. It might be a scanned image requiring OCR.")
+
+    # Override source metadata to store only the filename (matching notebook behavior)
+    for doc in documents:
+        doc.metadata['source'] = os.path.basename(file_path)
         
     return documents

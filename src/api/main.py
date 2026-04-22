@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from .routes import query
+from .routes import query, system
 from src.core.config import settings
 from src.core.logger import logger
 
@@ -20,11 +20,8 @@ app.add_middleware(
 )
 
 # Include routers
-app.include_router(query.router)
-
-@app.get("/health", tags=["Health"])
-async def health_check():
-    return {"status": "healthy", "app_name": settings.APP_NAME}
+app.include_router(query.router, prefix="/api")
+app.include_router(system.router, prefix="/api")
 
 @app.on_event("startup")
 async def startup_event():

@@ -11,7 +11,7 @@ class RAGPipeline:
         self.generator = LLMGenerator()
         logger.info("RAG Pipeline initialized.")
 
-    def answer_query(self, query_text: str, n_results: int = 5) -> dict:
+    def answer_query(self, query_text: str, n_results: int = 3, llm_backend: str = None) -> dict:
         """
         Processes a user query through the RAG flow:
         1. Retrieve relevant context
@@ -42,7 +42,7 @@ class RAGPipeline:
         ]
         
         # 2. Generation
-        answer = self.generator.generate_answer(context, query_text)
+        answer = self.generator.generate_answer(context, query_text, llm_backend=llm_backend)
         
         return {
             "answer": answer,
