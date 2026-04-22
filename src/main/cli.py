@@ -1,8 +1,8 @@
 import sys
 import os
 
-# Ensure src is in the python path
-sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+# Ensure src is in the python path (parent of main directory)
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from rag.retriever import VectorRetriever
 from rag.generator import LLMGenerator

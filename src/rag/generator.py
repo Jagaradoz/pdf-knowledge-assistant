@@ -1,5 +1,5 @@
 from langchain_core.prompts import PromptTemplate
-from config import LLM_BACKEND, OLLAMA_MODEL, OPENAI_API_KEY
+from main.config import LLM_BACKEND, OLLAMA_MODEL, OPENAI_API_KEY
 
 class LLMGenerator:
     def __init__(self):
