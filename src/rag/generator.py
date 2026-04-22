@@ -69,7 +69,12 @@ class LLMGenerator:
         """
         llm = self._get_llm(llm_backend, model)
         chain = self.prompt | llm
-        return chain.invoke({
+        answer = chain.invoke({
             "context": context,
             "query": query
         })
+        
+        # Ensure we return a string (OpenAI returns a message object, Ollama usually returns a string)
+        if hasattr(answer, "content"):
+            return str(answer.content)
+        return str(answer)
